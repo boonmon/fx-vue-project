@@ -8,7 +8,6 @@
  *     toMoney: util.toMoney,
  * }
  *
- * {{toMoney(12345678)}}
  *
  * 显示字符串 "123,456.78"
  *
