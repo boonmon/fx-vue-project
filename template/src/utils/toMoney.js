@@ -8,14 +8,14 @@
  *     toMoney: util.toMoney,
  * }
  *
- * <div>{{toMoney(12345678)}}</div>
+ * {{toMoney(12345678)}}
  *
  * 显示字符串 "123,456.78"
  *
  * @param {Number|String} val
  */
 export default val => {
-	if(!val){
+    if (!val) {
         return '';
     }
     return Number.parseFloat(val).toLocaleString('zh-CN', {
