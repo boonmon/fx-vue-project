@@ -174,8 +174,8 @@ module.exports = {
     'test/unit/specs/index.js': "unit && runner === 'karma'",
     'test/unit/setup.js': "unit && runner === 'jest'",
     'test/e2e/**/*': 'e2e',
-    'src/page/login/*': 'login',
-    'src/utils/loginUtil.js': 'login'
+    // 'src/page/login/*': 'login',
+    // 'src/utils/loginUtil.js': 'login'
   },
   complete: function (data,
     { chalk }) {
