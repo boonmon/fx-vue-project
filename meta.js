@@ -123,21 +123,21 @@ module.exports = {
       type: 'confirm',
       message: 'Setup e2e tests with Nightwatch?',
     },
-    weUI: {
-      when: 'isNotTest',
-      type: 'confirm',
-      message: 'use weUI in your project?'
-    },
-    mintUI: {
-      when: 'isNotTest',
-      type: 'confirm',
-      message: 'use mintUI in your project?'
-    },
-    login: {
-      when: 'isNotTest',
-      type: 'confirm',
-      message: 'use login method in your project?'
-    },
+    // weUI: {
+    //   when: 'isNotTest',
+    //   type: 'confirm',
+    //   message: 'use weUI in your project?'
+    // },
+    // mintUI: {
+    //   when: 'isNotTest',
+    //   type: 'confirm',
+    //   message: 'use mintUI in your project?'
+    // },
+    // login: {
+    //   when: 'isNotTest',
+    //   type: 'confirm',
+    //   message: 'use login method in your project?'
+    // },
     autoInstall: {
       when: 'isNotTest',
       type: 'list',
