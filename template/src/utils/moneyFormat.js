@@ -2,7 +2,6 @@
  *  import {formatMoney} from '@/utils/moneyFormat';
  *
  */
-import toMoney from './toMoney'
 export const formatMoney = (amount) => {
     var amount = Number(amount);
     var label = '';
@@ -83,89 +82,61 @@ export const rmbFormat = (amount) => {
     return moneyObj.result;
 }
 
-export const moneyChineseStr = (money)=>{
-    console.log(money);
-    //汉字的数字
-      var cnNums = new Array('零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖');
-      //基本单位
-      var cnIntRadice = new Array('', '拾', '佰', '仟');
-      //对应整数部分扩展单位
-      var cnIntUnits = new Array('', '万', '亿', '兆');
-      //对应小数部分单位
-      var cnDecUnits = new Array('角', '分', '毫', '厘');
-      //整数金额时后面跟的字符
-      var cnInteger = '整';
-      //整型完以后的单位
-      var cnIntLast = '元';
-      //最大处理的数字
-      var maxNum = 999999999999999.9999;
-      //金额整数部分
-      var integerNum;
-      //金额小数部分
-      var decimalNum;
-      //输出的中文金额字符串
-      var chineseStr = '';
-      //分离金额后用的数组，预定义
-      var parts;
-      if (money == '') { return ''; }
-      money = parseFloat(money);
-      if (money >= maxNum) {
-        //超出最大处理数字
-        return '';
-      }
-      if (money == 0) {
-        chineseStr = cnNums[0] + cnIntLast + cnInteger;
-        return chineseStr;
-      }
-      //转换为字符串
-      money = money.toString();
-      if (money.indexOf('.') == -1) {
-        integerNum = money;
-        decimalNum = '';
-      } else {
-        parts = money.split('.');
-        integerNum = parts[0];
-        decimalNum = parts[1].substr(0, 4);
-      }
-      //获取整型部分转换
-      if (parseInt(integerNum, 10) > 0) {
-        var zeroCount = 0;
-        var IntLen = integerNum.length;
-        for (var i = 0; i < IntLen; i++) {
-          var n = integerNum.substr(i, 1);
-          var p = IntLen - i - 1;
-          var q = p / 4;
-          var m = p % 4;
-          if (n == '0') {
-            zeroCount++;
-          } else {
-            if (zeroCount > 0) {
-              chineseStr += cnNums[0];
-            }
-            //归零
-            zeroCount = 0;
-            chineseStr += cnNums[parseInt(n)] + cnIntRadice[m];
-          }
-          if (m == 0 && zeroCount < 4) {
-            chineseStr += cnIntUnits[q];
-          }
-        }
-        chineseStr += cnIntLast;
-      }
-      //小数部分
-      if (decimalNum != '') {
-        var decLen = decimalNum.length;
-        for (var i = 0; i < decLen; i++) {
-          var n = decimalNum.substr(i, 1);
-          if (n != '0') {
-            chineseStr += cnNums[Number(n)] + cnDecUnits[i];
-          }
-        }
-      }
-      if (chineseStr == '') {
-        chineseStr += cnNums[0] + cnIntLast + cnInteger;
-      } else if (decimalNum == '') {
-        chineseStr += cnInteger;
-      }
-      return chineseStr;
+
+export const formatMillion = (num) => {
+    if (num) {
+        let temp = Number(num);
+        if (num < 1000) {
+            return Math.round(num / 100) / 100 + 'W'
+        } else if (num >= 1000) {
+            return (Math.round(num / 1000)) / 10 + 'W'
+        }
+    }
 }
+
+export const csMoenyFormat = function(money, type) {
+    let pM = Math.ceil(money)
+    let m = pM.toString()
+    let l = m.length
+    let h = parseInt(m[0]) * Math.pow(10, l - 1)
+    if (pM == 0 || (l > 1 && pM % h == 0)) {
+        return pM
+    }
+    if (type == 'ceil') {
+        let o = l > 1 ? parseInt(m[0]) + 1 : 10;
+        return o * Math.pow(10, l - 1)
+    } else if (type == 'floor') {
+        let o = l > 1 ? parseInt(m[0]) : 0;
+        return o * Math.pow(10, l - 1)
+    }
+}
+
+//处理输入金额函数
+export const fmoney = function(s, n, e) {
+    if (s === undefined) {
+        return '0.00';
+    }
+    let ss = s; //赋值两位数
+    n = n > 0 && n <= 20 ? n : 2;
+    s = parseFloat((s + "").replace(/[^\d.-]/g, "")).toFixed(n) + ""; //更改这里n数也可确定要保留的小数位
+    let l = s.split(".")[0].split("").reverse();
+    let r = s.split(".")[1] || '00';
+    let t = "";
+    for (let i = 0; i < l.length; i++) {
+        t += l[i] + ((i + 1) % 3 == 0 && i + 1 != l.length ? "," : "");
+    }
+    if (e == "") { //时间格式化
+        if (l.length == 2) {
+            return ss;
+        } else {
+            //
+            return (
+                r.substring(0, 2) + t.split("").reverse().join("")
+            ); //保留2位小数  如果要改动 把substring 最后一位数改动就可
+        }
+    } else { //金额格式化
+        return (
+            t.split("").reverse().join("") + e + r.substring(0, 2)
+        ); //保留2位小数  如果要改动 把substring 最后一位数改动就可
+    }
+};

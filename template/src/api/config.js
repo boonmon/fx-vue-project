@@ -1,129 +1,91 @@
+import Qs from 'qs'
+
 //  baseURL 请求后台网关地址  wxUrl 微信http://url   trackUrl 埋点js地址
 export default (() => {
-    const env = process.env.CUR_ENV
     let config
-        //配置不同环境所需的参数或参数值（按项目所需自行配置）
-    if (env === 'development') {
-        // npm run dev模式
+    let nodeEnv = process.env.NODE_ENV
+    if (nodeEnv === 'local') {
+        config = {
+            baseURL: 'http://appserver.wintax.cn/tree/back',
+            wxUrl: 'http://twx.jchl.com',
+            wxAppId: 'wxf4165bbc217ec388',
+            trackUrl: 'http://omni.esv.com.cn/behavior/script/maidian.js',
+            cmsImgvUrl: 'http://test.pxpt.wintax.cn/resource',
+            wxImgvUrl: 'http://dwx.wintax.cn/resource',
+            cdnUrl: 'http://10.10.0.213:8912/wxresource',
+            fileUploadUrl: 'http://10.10.0.206:9001',
+        }
+    } else if (nodeEnv === 'test') {
         config = {
             baseURL: window.location.origin,
-            templateIdList: [
-                'pXDKOzIkX4eVdM1LpNqcSLjT00G9gYKSzye5nSPhclw',
-                'beHZMrQO-Gd-Tw28lrL5mMlbuKqBLDWHAaYz4yjtzqE',
-                '-XGID8s8ZCBQCFlOO_xXRFgO713wdXwCV36U7xzqjJ8',
-            ],
-            taxTemplateId: 'beHZMrQO-Gd-Tw28lrL5mMlbuKqBLDWHAaYz4yjtzqE',
-            wxUrl: 'http://dwx.wintax.cn',
-            wxAppId: 'wxf4165bbc217ec388',
-            appId: 'c23087dbd171434697f356859e9e9a93',
+            wxUrl: 'http://twx.jchl.com',
             trackUrl: 'http://omni.esv.com.cn/behavior/script/maidian.js',
             cmsImgvUrl: 'http://tcms.jchl.com/resource',
-            wxImgvUrl: 'http://dwx.wintax.cn/resource',
-            cdnUrl: 'http://cdn.jchl.com',
-            xyUrl: 'http://tq.jchl.com/mobile/index',
-            encodeUrl: 'http://t.vanvy.cn:8082/Web/Im/mobile.html',
-            fileUploadUrl: window.location.origin,
-            expenseTypeUrl: 'http://dcdn.jchl.com/weChatMall/json/typeJson/expenseType.json',
-            psbUrl: 'http://psb.mobi/api/dev',
+            wxImgvUrl: 'http://twx.jchl.com/resource',
+            cdnUrl: 'http://tcdn.jchl.com',
+            fileUploadUrl: 'http://twx.jchl.com'
         }
-    } else if (env === 'dev') {
-        // npm run build:dev模式
+    } else if (nodeEnv === 'dev') {
+        // 是npm run builddev模式，不是npm run dev
         config = {
-            baseURL: 'http://dwx.wintax.cn',
-            templateIdList: [
-                'pXDKOzIkX4eVdM1LpNqcSLjT00G9gYKSzye5nSPhclw',
-                'beHZMrQO-Gd-Tw28lrL5mMlbuKqBLDWHAaYz4yjtzqE',
-                '-XGID8s8ZCBQCFlOO_xXRFgO713wdXwCV36U7xzqjJ8',
-            ],
-            taxTemplateId: 'beHZMrQO-Gd-Tw28lrL5mMlbuKqBLDWHAaYz4yjtzqE',
-            wxUrl: 'http://dwx.wintax.cn',
-            wxAppId: 'wx6f6e12681df4bd95',
+            baseURL: window.location.origin,
+            wxUrl: window.location.origin,
             trackUrl: 'http://omni.esv.com.cn/behavior/script/maidian.js',
-            cmsImgvUrl: 'http://tcms.jchl.com/resource',
+            cmsImgvUrl: 'http://test.pxpt.wintax.cn/resource',
             wxImgvUrl: 'http://dwx.wintax.cn/resource',
             cdnUrl: 'http://dcdn.jchl.com',
-            xyUrl: 'http://tq.jchl.com/mobile/index',
-            encodeUrl: 'http://t.vanvy.cn:8082/Web/Im/mobile.html',
-            fileUploadUrl: 'http://dwx.wintax.cn',
-            expenseTypeUrl: 'http://dcdn.jchl.com/weChatMall/json/typeJson/expenseType.json',
-            psbUrl: 'http://psb.mobi/api/dev',
+            fileUploadUrl: window.location.origin,
         }
-    } else if (env === 'test') {
+    } else if (nodeEnv === 'preproduction') {
         config = {
-            baseURL: 'http://10.10.7.17',
-            templateIdList: [
-                'Il7Mrz-7djmT9FiEZvsvqq37BRi2qp6UOVbjTApu8qA',
-                'PSooUldowbsRj-oStXU04Fa-rHE-yycCaTDn5p-3gC4',
-                '4D8-Jo-9cm22rP_-RRMwGu_DUT3jw_m-CqdDx0PuhSA',
-            ],
-            taxTemplateId: 'PSooUldowbsRj-oStXU04Fa-rHE-yycCaTDn5p-3gC4',
-            wxUrl: 'http://10.10.7.17',
-            wxAppId: 'wxf664fe22ede5921e',
-            trackUrl: 'http://omni.esv.com.cn/behavior/script/maidian.js',
-            cmsImgvUrl: 'http://10.10.7.17/resource',
-            wxImgvUrl: 'http://10.10.7.17/resource',
-            cdnUrl: 'http://tcdn.jchl.com',
-            xyUrl: 'http://test.jchl.com:28080/mobile/index',
-            encodeUrl: 'http://t.vanvy.cn:8082/Web/Im/mobile.html',
-            fileUploadUrl: 'http://tpt.jchl.com',
-            expenseTypeUrl: 'http://tcdn.jchl.com/weChatMall/json/typeJson/expenseType.json',
-            psbUrl: 'http://psb.mobi/api/test',
-        }
-    } else if (env === 'preprod') {
-        config = {
-            baseURL: 'http://prwx.jchl.com',
-            templateIdList: [
-                'pXDKOzIkX4eVdM1LpNqcSLjT00G9gYKSzye5nSPhclw', //没用
-                'beHZMrQO-Gd-Tw28lrL5mMlbuKqBLDWHAaYz4yjtzqE', //没用
-                'zG-KVOJKdZRQEGMxABXilruw5_R_IxXNPtL9c2hucUA',
-            ],
+            baseURL: window.location.origin,
             wxUrl: 'http://prwx.jchl.com',
-            wxAppId: 'wx5056a3b0136663bc',
             trackUrl: 'http://xwfx.jchl.com/maidian.js',
             cmsImgvUrl: 'http://cms-cdn.jchl.com/vfs_home',
             wxImgvUrl: 'http://prwx.jchl.com/resource',
             cdnUrl: 'http://cdn.jchl.com',
-            xyUrl: 'http://xy.jchl.com/mobile/index',
-            encodeUrl: 'http://t.vanvy.cn:8082/Web/Im/mobile.html',
-            fileUploadUrl: 'http://prpt.jchl.com',
-            expenseTypeUrl: 'http://ecdn.jchl.com/weChatMall/json/typeJson/expenseType.json',
-            psbUrl: 'http://psb.mobi/api/pre',
+            fileUploadUrl: 'http://prwx.jchl.com',
         }
-    } else if (env === 'prod') {
+    } else if (nodeEnv === 'production') {
         config = {
-            baseURL: 'http://wx.jchl.com',
-            templateIdList: [
-                '0Ot9Fht3fYWBBC4aQkH3MF4qYNNQZ--Bsi3B0B0UXVg',
-                'JkKHrmHgq4LXJfcuJANdx9ixT325E6DoqWPuOHDBqlc',
-                'Z6YG0T14Si5yLrU_NtN2vlVasGD6tlzuT1kMearqvTM',
-            ],
-            taxTemplateId: 'JkKHrmHgq4LXJfcuJANdx9ixT325E6DoqWPuOHDBqlc',
+            baseURL: window.location.origin,
             wxUrl: 'http://wx.jchl.com',
-            wxAppId: 'wx35102306dfc2506e',
             trackUrl: 'http://xwfx.jchl.com/maidian.js',
             cmsImgvUrl: 'http://cms-cdn.jchl.com/vfs_home',
             wxImgvUrl: 'http://wx.jchl.com/resource',
             cdnUrl: 'http://cdn.jchl.com',
-            xyUrl: 'http://xy.jchl.com/mobile/index',
-            encodeUrl: 'http://t.vanvy.cn:8082/Web/Im/mobile.html',
-            fileUploadUrl: 'http://pt.jchl.com',
-            expenseTypeUrl: 'http://cdn.jchl.com/weChatMall/json/typeJson/expenseType.json',
-            psbUrl: 'http://psb.jchl.com/api',
+            fileUploadUrl: 'http://wx.jchl.com',
+        }
+    } else {
+        // npm run dev模式
+        config = {
+            baseURL: window.location.origin,
+            wxUrl: 'http://wx.jchl.com',
+            trackUrl: 'http://omni.esv.com.cn/behavior/script/maidian.js',
+            cmsImgvUrl: 'http://tcms.jchl.com/resource',
+            wxImgvUrl: 'http://dwx.wintax.cn/resource',
+            cdnUrl: 'http://cdn.jchl.com',
+            fileUploadUrl: window.location.origin,
         }
     }
-
     config = {
         ...config,
-
-        // 添加通用配置
-        busTypeId: '', //业产品线id
+        //添加通用配置
         url: '/route',
-        appId: 'c23087dbd171434697f356859e9e9a93', //
+        appId: '000111', //微信企业主端调用接口配置
+        gateway:'gateway',//默认过gateway网关
         method: 'POST',
+        transformResponse: [
+            function(data) {
+                return data
+            },
+        ],
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        params: {},
         paramsSerializer: function(params) {
             return Qs.stringify(params)
         },
+        data: {},
         timeout: 20000,
         withCredentials: false, // default
         responseType: 'json', // default

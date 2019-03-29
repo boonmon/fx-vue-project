@@ -1,90 +1,63 @@
 import localStorageUtil from './localStorageUtil'
 import sessionStorageUtil from './sessionStorageUtil'
-import cookieUtil from './cookieUtil';
 export default {
 
-   changeIns(selectIns){
+    setLoginInfo(data) {
+        console.log("userinfo", data)
+        sessionStorageUtil.setItem(sessionStorageUtil.WX_USER_LOGIN, true);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_ID, data.userId);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_UID, data.uid);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_TOKEN, data.token);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_ENCODE, data.encode);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_PHONE, data.phone);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_APPID, data.appId);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_NAME,data.userName);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_EMAIL,data.email);
+        localStorageUtil.setItem(localStorageUtil.WX_USER_CUSTSTORELIST, data.cusList ==
+            undefined ? "" : JSON.stringify(data.cusList));
+        localStorageUtil.setItem(localStorageUtil.WX_SERVICE_USER_INFO, JSON.stringify(data.wxServerUserInfo));
 
-        let maceSelectIns=localStorageUtil.getItem(localStorageUtil.MACE_SELECED_INS);
-        maceSelectIns=JSON.parse(maceSelectIns);
+        var custId = localStorageUtil.getItem(localStorageUtil.WX_USER_CUST_ID) || '';
 
-        for(var i=0;i<maceSelectIns.length;i++){
+        console.info("data.cusList=", data.cusList);
 
-         let userId=maceSelectIns[i].userId
 
-         if(userId==selectIns.userId){
-             maceSelectIns[i].insId=selectIns.insId
-             maceSelectIns[i].insName=selectIns.insName
-             maceSelectIns[i].depId=selectIns.depId
-
-             sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_INS_ID,selectIns.insId)
-             sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_INS_NAME,selectIns.insName)
-             sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_DEP_ID,selectIns.depId)
-             break
-         }
-
-       }
-
-       localStorageUtil.setItem(localStorageUtil.MACE_SELECED_INS,maceSelectIns);
+        if (data.cusList != null && data.cusList.length > 0) {
+            localStorageUtil.setItem(localStorageUtil.WX_USER_CUST_ID, data.cusList[0].custId); //默认选中第一个企业
+            localStorageUtil.setItem(localStorageUtil.WX_USER_CUST_NAME, data.cusList[0].custName); //默认选中第一个企业
+            localStorageUtil.setItem(localStorageUtil.WX_USER_CUST_NSRSBH, data.cusList[0].nsrsbh); //默认选中第一个企业
+        }
 
     },
+    logout() {
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_ID);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_UID);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_NAME);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_EMAIL);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_TOKEN);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_ENCODE);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_PHONE);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_APPID);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_CUSTSTORELIST);
+        localStorageUtil.removeItem(localStorageUtil.WX_SERVICE_USER_INFO);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_CUST_ID);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_CUST_NAME);
+        localStorageUtil.removeItem(localStorageUtil.WX_USER_CUST_NSRSBH);
+        sessionStorageUtil.removeItem(sessionStorageUtil.WX_USER_LOGIN);
+    },
+    ssoLogin(ssoClientUrl){
+        let ssoClientUrlFinal = decodeURI(ssoClientUrl)
+        console.info("登录成功跳转地址="+ssoClientUrlFinal);
+        let token = localStorageUtil.getItem(localStorageUtil.WX_USER_TOKEN);
+        if(ssoClientUrlFinal.indexOf("?")>-1){
+            ssoClientUrlFinal = ssoClientUrlFinal+"&token="+token
+        }
+        else{
+            ssoClientUrlFinal = ssoClientUrlFinal+"?token="+token
+        }
+        sessionStorageUtil.removeItem(sessionStorageUtil.WX_SSO_CLIENT_URL)
+        window.location.href = ssoClientUrlFinal;
+    }
 
-	 setLoginInfo(userinfo){
 
-     sessionStorageUtil.setItem(sessionStorageUtil.MCE_USER_ID,userinfo.userId);//用户Id
-     sessionStorageUtil.setItem(sessionStorageUtil.MCE_USER_INFO,userinfo);//用户信息
-     sessionStorageUtil.setItem(sessionStorageUtil.MCE_INS_INFO,userinfo.departmentList);//机构信息
-
-     localStorageUtil.setItem(localStorageUtil.MACE_LOGIN_REFRETOKEN,userinfo.refreshToken);//设置refreshToken
-     let maceSelectIns=localStorageUtil.getItem(localStorageUtil.MACE_SELECED_INS);
-
-     let flag=0;
-     if(maceSelectIns!=null){
-
-        maceSelectIns=JSON.parse(maceSelectIns);
-        for(var i=0;i<maceSelectIns.length;i++){
-
-         let userId=maceSelectIns[i].userId
-
-         if(userId==userinfo.userId){
-
-             sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_INS_ID,maceSelectIns[i].insId)
-             sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_INS_NAME,maceSelectIns[i].insName)
-             sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_DEP_ID,maceSelectIns[i].depId)
-             flag=1;
-             break
-         }
-
-       }
-     }else{
-
-         maceSelectIns=[]
-
-     }
-    
-     if(flag==0){
-
-          let item={userId:userinfo.userId, 
-            insId:userinfo.departmentList[0].insId,
-            insName:userinfo.departmentList[0].insName,
-            depId:userinfo.departmentList[0].depId}
-          maceSelectIns.push(item);
-          sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_INS_ID,userinfo.departmentList[0].insId)//默认选中第一个机构
-          sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_INS_NAME,userinfo.departmentList[0].insName)//默认选中第一个机构
-          sessionStorageUtil.setItem(sessionStorageUtil.MACE_SELECED_DEP_ID,userinfo.departmentList[0].depId)//默认选中第一个部门id
-
-          localStorageUtil.setItem(localStorageUtil.MACE_SELECED_INS,JSON.stringify(maceSelectIns))
-     }
-     
-
-	 },
-	 logout(){
-         //debugger;
-          window.sessionStorage.clear();
-          window.localStorage.clear();
-          cookieUtil.delCookie("autologin");
-
-	 }
-	
-    
 }

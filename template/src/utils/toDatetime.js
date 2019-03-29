@@ -1,47 +1,55 @@
 /**
  * 时间格式化
- * yyyy-MM-dd HH:mm:ss
+ *
  * @param {Date} data
  */
-export default (data,format_style) => {
-    if(!data){
-        return '';
-    }
-    let now = new Date(parseInt(data))
+/**
+ * 时间格式化
+ *
+ * @param {Date} data
+ */
+export default data => {
+    let now = new Date(data)
     let year = padZero(now.getFullYear())
     let month = padZero(now.getMonth() + 1)
     let date = padZero(now.getDate())
     let hour = padZero(now.getHours())
     let minute = padZero(now.getMinutes())
     let second = padZero(now.getSeconds())
-    if(!format_style){
-      return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second
-    }else{
-      format_style = format_style.replace("yyyy",year); 
-      format_style = format_style.replace("MM",month);  
-      format_style = format_style.replace("dd",date);  
-      format_style = format_style.replace("HH",hour);
-      format_style = format_style.replace("mm",minute); 
-      format_style = format_style.replace("ss",second); 
-      return format_style;
-    }
+    return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second
 }
 
 export const toDate = data => {
-    if(!data){
-        return '';
-    }
-    let _data = data.replace(/-/g,'/').replace(/T/g,' ')
-    if(_data.indexOf('.')) {
-        _data = _data.split('.')[0]
-    }
-    console.log('_data',_data)
-    let now = new Date(_data)
+    let now = new Date(data)
     let year = padZero(now.getFullYear())
     let month = padZero(now.getMonth() + 1)
     let date = padZero(now.getDate())
     return year + '-' + month + '-' + date
 }
 
-
 const padZero = val => (val < 10 ? '0' + val : val)
+
+
+export function formatDate(date, fmt) {
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+    }
+    let o = {
+        'M+': date.getMonth() + 1,
+        'd+': date.getDate(),
+        'h+': date.getHours(),
+        'm+': date.getMinutes(),
+        's+': date.getSeconds()
+    };
+    for (let k in o) {
+        let str = o[k] + '';
+        if (new RegExp(`(${k})`).test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : padLeftZero(str));
+        }
+    }
+    return fmt;
+}
+
+function padLeftZero(str) {
+    return ('00' + str).substr(str.length);
+}

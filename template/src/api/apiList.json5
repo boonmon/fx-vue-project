@@ -1,7 +1,0 @@
-{
-   // id: [工厂, 路径, url参数, 默认参数（可不填，方便多次调用时，不需多次填写固定参数，且方便维护）]
-  /*使用例子（了解后请删除）*/
-  getDicList: ['apiFactory', '/communal/communal/dicListService/getDicList', 'normal',{test:'这是默认参数'}],
-  /*使用例子（了解后请删除）*/
-  
-}
