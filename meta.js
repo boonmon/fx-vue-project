@@ -167,19 +167,18 @@ module.exports = {
     '.eslintignore': 'lint',
     'config/test.env.js': 'unit || e2e',
     'build/webpack.test.conf.js': "unit && runner === 'karma'",
-    'test/unit /**/*': 'unit',
+    'test/unit/**/*': 'unit',
     'test/unit/index.js': "unit && runner === 'karma'",
     'test/unit/jest.conf.js': "unit && runner === 'jest'",
     'test/unit/karma.conf.js': "unit && runner === 'karma'",
     'test/unit/specs/index.js': "unit && runner === 'karma'",
     'test/unit/setup.js': "unit && runner === 'jest'",
-    'test/e2e /**/*': 'e2e',
+    'test/e2e/**/*': 'e2e',
     'src/page/login/*': 'login',
     'src/utils/loginUtil.js': 'login'
   },
   complete: function (data,
-    { chalk
-    }) {
+    { chalk }) {
     const green = chalk.green
 
     sortDependencies(data, green)
