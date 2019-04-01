@@ -58,7 +58,7 @@ const webpackConfig = {
             {
                 test: /\.js$/,
                 loader: ['babel-loader?cacheDirectory=true'],
-                include: [resolve('src'), resolve('test'), resolve('node_modules/mint-ui/src/utils/dom.js')]
+                include: [resolve('src'), resolve('test'){{#mintUI}}, resolve('node_modules/mint-ui/src/utils/dom.js'){{/mintUI}}]
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

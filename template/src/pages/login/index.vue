@@ -17,7 +17,7 @@
                     <div style="width: 35%;float: left;height: 2em;background-color: #FF7045;border-radius:4px;text-align: center; display: flex;
         justify-content: center;
         align-items: center;">
-                        <a  v-on:click="captcha()" style="color: #ffffff">{{validText}}</a>
+                        <a  v-on:click="captcha()" style="color: #ffffff">{{{validText}}}</a>
 
                     </div>
 
