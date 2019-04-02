@@ -88,7 +88,7 @@ export const deepCopy = obj => {
  * @param {*} url
  * @param {*} paramName
  */
-export const deleteUrlParam = function(url, paramName) {
+export const deleteUrlParam = function (url, paramName) {
     //处理url 兼容 http://XXX/***.html#page1模式的url的处理
     let url_prefix = "";
     let uArr = url.split('#');
@@ -127,7 +127,7 @@ export const deleteUrlParam = function(url, paramName) {
  * @param radix 基数
  * @returns {string}
  */
-export const geneUUID = function(len, radix) {
+export const geneUUID = function (len, radix) {
     let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
     let uuid = [],
         i;
@@ -156,3 +156,5 @@ export const geneUUID = function(len, radix) {
 
     return uuid.join('');
 };
+
+

@@ -88,7 +88,7 @@
     import {Toast, Indicator} from 'mint-ui';
     import localStorageUtil from '@/utils/localStorageUtil'
     import sessionStorageUtil from '@/utils/sessionStorageUtil'
-    import _track from '../../api/track';
+    // import _track from '../../api/track';
     import loginUtil from "@/utils/loginUtil"
     export default {
         data () {

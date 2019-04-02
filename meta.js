@@ -179,6 +179,8 @@ module.exports = {
     'test/unit/specs/index.js': "unit && runner === 'karma'",
     'test/unit/setup.js': "unit && runner === 'jest'",
     'test/e2e/**/*': 'e2e',
+    'src/assets/css/mint-ui-cover.css': 'mintUI',
+    'src/assets/css/weui-cover.css': 'weUI',
     'src/page/login/*': 'login',
     'src/utils/loginUtil.js': 'login'
   },

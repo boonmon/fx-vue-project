@@ -14,8 +14,10 @@ import polyfill from './assets/js/polyfill'
 // css
 import 'normalize.css/normalize.css'
 import './assets/css/reset.css'
+{{#mintUI}}
 import 'mint-ui/lib/style.css'
 import './assets/css/mint-ui-cover.css'
+{{/mintUI}}
 {{#weUI}}
 import './assets/css/weui-cover.css'
 {{/weUI}}

@@ -1,6 +1,5 @@
 import axios from 'axios'
 import config from './config'
-import Qs from 'qs'
 
 const devName = ''
 const wechat = 'wechat'
@@ -9,7 +8,6 @@ const wxUrl = config.wxUrl
 const wxAppId = config.wxAppId
 const appId = config.appId
 const cmsAppId = '000111'
-const methodParams = require('./methodParams.json')
 
 import localStorageUtil from '@/utils/localStorageUtil'
 import apiList from './apiList.js'
@@ -27,24 +25,6 @@ var getUUID = function () {
     return (guidGenerator() + guidGenerator() + guidGenerator() + guidGenerator() + guidGenerator() + guidGenerator() + guidGenerator() + guidGenerator())
 }
 
-const urlCommonParams = () => {
-    var s = 'requestId=' + getUUID() + '&appId=' + appId + '&token=' + localStorageUtil.getItem(localStorageUtil.WX_USER_TOKEN)
-    return s
-}
-
-// api工厂
-const apiFactory = uri => payload => axios.post(uri, JSON.stringify(payload), config)
-const apiGetFactory = uri => payload => axios.get(uri, {}, config)
-
-const cmsApiFactory = uri => payload => axios.post(uri, JSON.stringify(payload), config)
-// url参数模板
-
-// 函数调用映射
-const factoryMapper = {
-    apiFactory,
-    apiGetFactory,
-    cmsApiFactory,
-}
 // 读取api列表
 import apiList from './apiList.js'
 
@@ -89,6 +69,7 @@ export default {
         let _appId = item.appId || appId;
         let develop = item.develop ? 'develop' : 'normal';
         let method = item.method ? item.method : 'post';
+        let gateway = item.gateway? item.gateway : config.gateway;
         let uri;
         let _config = item.config || {};
         if (process.env.NODE_ENV !== 'development') {
@@ -97,6 +78,9 @@ export default {
         const urlParam = {
             normal: 'requestId=' + getUUID() + '&token=' + localStorageUtil.getItem(localStorageUtil.WX_USER_TOKEN) + '&appId=' + _appId,
             develop: 'requestId=' + getUUID() + '&token=' + localStorageUtil.getItem(localStorageUtil.WX_USER_TOKEN) + '&appId=' + _appId + '&develop=' + item.develop,
+        }
+        if(uri.indexOf('http://') == -1 && uri.indexOf('https://') == -1) {
+            uri = '/' + gateway + uri;
         }
         if (item.uri.indexOf('?') > -1) {
             uri = item.uri + '&' + urlParam[develop];
